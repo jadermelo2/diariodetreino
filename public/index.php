@@ -37,6 +37,7 @@ try {
 }
 
 $sampleId = generate_id();
+$active = 'inicio';
 
 ?><!doctype html>
 <html lang="pt-BR">
@@ -50,6 +51,8 @@ $sampleId = generate_id();
   <link rel="stylesheet" href="assets/css/theme.css">
 </head>
 <body>
+  <?php include __DIR__ . '/includes/nav.php'; ?>
+
   <div class="container">
     <h1>Diário de Treino</h1>
     <p>Etapa 1 — estrutura base e camada de dados.</p>

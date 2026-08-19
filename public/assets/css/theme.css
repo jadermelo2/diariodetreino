@@ -232,3 +232,243 @@ label {
   border-color: var(--accent);
   color: var(--accent);
 }
+
+/* ------------------------------------------------------------------ */
+/* Navegação                                                          */
+/* ------------------------------------------------------------------ */
+
+.topnav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.topnav-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  overflow-x: auto;
+}
+
+.topnav-brand {
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.topnav-links {
+  display: flex;
+  gap: var(--space-4);
+  overflow-x: auto;
+}
+
+.topnav-link {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+  padding: var(--space-1) 0;
+  border-bottom: 2px solid transparent;
+}
+
+.topnav-link:hover {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.topnav-link.active {
+  color: var(--text);
+  border-bottom-color: var(--accent);
+}
+
+/* ------------------------------------------------------------------ */
+/* Listas / accordion (biblioteca de exercícios, rotinas, etc)        */
+/* ------------------------------------------------------------------ */
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.group-block {
+  margin-bottom: var(--space-5);
+}
+
+.group-title {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  margin-bottom: var(--space-2);
+}
+
+.list-group {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.list-item {
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.list-item:last-child {
+  border-bottom: none;
+}
+
+.list-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  min-height: var(--tap-target);
+  cursor: pointer;
+}
+
+.list-item-name {
+  font-weight: 600;
+}
+
+.list-item-chevron {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  transition: transform 0.15s ease;
+}
+
+.list-item.open .list-item-chevron {
+  transform: rotate(90deg);
+  color: var(--accent);
+}
+
+.list-item-body {
+  display: none;
+  padding: 0 var(--space-4) var(--space-4);
+}
+
+.list-item.open .list-item-body {
+  display: block;
+}
+
+.list-item-actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.list-item-actions button {
+  flex: 1;
+  min-height: 40px;
+  font-size: 0.9rem;
+}
+
+.video-embed {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 */
+  background: #000;
+  margin-bottom: var(--space-3);
+}
+
+.video-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* Modal (formulário de criar/editar)                                 */
+/* ------------------------------------------------------------------ */
+
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 100;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.modal-overlay.open {
+  display: flex;
+}
+
+.modal {
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--accent);
+  border-radius: var(--radius) var(--radius) 0 0;
+  padding: var(--space-4);
+}
+
+@media (min-width: 560px) {
+  .modal-overlay {
+    align-items: center;
+  }
+
+  .modal {
+    border-radius: var(--radius);
+    border-top: 1px solid var(--border);
+    border-left: 2px solid var(--accent);
+  }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.modal-header h3 {
+  margin: 0;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.4rem;
+  min-height: auto;
+  padding: 0 var(--space-2);
+}
+
+.field {
+  margin-bottom: var(--space-3);
+}
+
+.modal-actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+.modal-actions button {
+  flex: 1;
+}
+
+.form-error {
+  color: var(--danger);
+  font-size: 0.85rem;
+  margin: 0 0 var(--space-3);
+  min-height: 1.2em;
+}
