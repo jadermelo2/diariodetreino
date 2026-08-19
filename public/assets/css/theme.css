@@ -532,3 +532,226 @@ label {
 .routine-exlist .ex-sets {
   color: var(--text-muted);
 }
+
+/* ------------------------------------------------------------------ */
+/* Treino ativo — a tela mais usada, foco total em mobile             */
+/* ------------------------------------------------------------------ */
+
+.setup-block {
+  margin-bottom: var(--space-5);
+}
+
+.setup-block h3 {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: var(--space-2);
+}
+
+.rotina-pick {
+  width: 100%;
+  text-align: left;
+  margin-bottom: var(--space-2);
+  justify-content: space-between;
+}
+
+.rotina-pick .badge {
+  flex-shrink: 0;
+}
+
+.workout-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.workout-header .btn {
+  min-height: 40px;
+  font-size: 0.85rem;
+  padding: var(--space-2) var(--space-3);
+}
+
+.exercise-avisofim {
+  display: none;
+  color: var(--ok);
+  border: 1px dashed var(--ok);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius);
+  margin-bottom: var(--space-3);
+  font-size: 0.9rem;
+}
+
+.exercise-avisofim.show {
+  display: block;
+}
+
+.exercise-name {
+  font-size: 1.6rem;
+  line-height: 1.2;
+  margin-bottom: var(--space-4);
+  word-break: break-word;
+}
+
+.sets-log {
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.sets-log-title {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: var(--space-2);
+}
+
+.sets-log-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-mono);
+}
+
+.sets-log-list li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-1) 0;
+  font-size: 1rem;
+}
+
+.sets-log-list .set-index {
+  color: var(--text-muted);
+  min-width: 1.5em;
+}
+
+.sets-log-list .set-value {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.input-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.input-row label {
+  text-align: center;
+}
+
+.input-big {
+  font-size: 2rem;
+  text-align: center;
+  min-height: 72px;
+  font-weight: 700;
+}
+
+.btn-register {
+  width: 100%;
+  min-height: 64px;
+  font-size: 1.2rem;
+  margin-bottom: var(--space-4);
+}
+
+.rest-timer {
+  display: none;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.rest-timer.show {
+  display: block;
+}
+
+.rest-timer.done {
+  border-color: var(--ok);
+}
+
+.rest-timer-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: var(--space-2);
+}
+
+.rest-timer-count {
+  font-family: var(--font-mono);
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: var(--space-3);
+}
+
+.rest-timer.done .rest-timer-count {
+  color: var(--ok);
+}
+
+.rest-timer-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.rest-timer-actions button {
+  flex: 1;
+  min-height: 40px;
+  font-size: 0.85rem;
+}
+
+.workout-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.workout-actions .btn {
+  width: 100%;
+}
+
+.picker-list {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.picker-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  min-height: var(--tap-target);
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.picker-item:last-child {
+  border-bottom: none;
+}
+
+.picker-item:hover {
+  background: var(--surface-alt);
+}
+
+.picker-item .grupo-tag {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-family: var(--font-mono);
+}
+
+.finish-summary {
+  padding: var(--space-4);
+  margin-bottom: var(--space-4);
+}
