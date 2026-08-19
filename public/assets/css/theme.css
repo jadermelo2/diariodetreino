@@ -1,0 +1,234 @@
+/*
+ * theme.css — Diário de Treino
+ *
+ * Tema ativo: TACTICAL / MINIMAL
+ * Grafite quase preto, acento único (vermelho-sinal), tipografia
+ * monoespaçada para números, cantos retos. Visual denso em dados, sem
+ * sombras/glow/gradientes — um instrumento, não um dashboard bonito.
+ *
+ * Todas as cores/tipografia ficam em custom properties em :root para
+ * trocar o tema inteiro num único lugar. Para trocar o acento de
+ * vermelho para azul-elétrico, basta mudar --accent e --accent-contrast
+ * abaixo.
+ *
+ * ---------------------------------------------------------------------
+ * TEMAS ALTERNATIVOS (documentação apenas — não implementados agora)
+ * ---------------------------------------------------------------------
+ *
+ * INDUSTRIAL / CONCRETE
+ *   --bg: #121212 (ou #1a1a1a)
+ *   --accent: #FF5A1F (laranja-segurança) ou #C6FF3D (verde-limão)
+ *   Tipografia: Oswald ou Bebas Neue (títulos, condensada/bold),
+ *   Inter (corpo). Linhas finas tipo blueprint, cantos retos.
+ *
+ * NEON PERFORMANCE
+ *   --bg: #0A0E17 (ou #0D1321), azul-marinho quase preto
+ *   --accent: #00E5FF (ciano) + #B14EFF (violeta) como segundo acento
+ *   Cards com leve glassmorphism (blur + borda translúcida), glow sutil
+ *   em barras/badges. Tipografia: Rajdhani ou Orbitron (números），
+ *   Inter (texto).
+ *
+ * Para ativar um desses no futuro: duplicar o bloco :root abaixo,
+ * ajustar os valores, e trocar o <link> de fontes no <head> das páginas.
+ * ---------------------------------------------------------------------
+ */
+
+:root {
+  /* Cores base */
+  --bg: #0F0F10;
+  --surface: #1A1A1B;
+  --surface-alt: #232324;
+  --border: #2E2E30;
+
+  --text: #E8E8E8;
+  --text-muted: #8A8A8A;
+
+  /* Acento único — troque aqui para mudar o tema inteiro.
+     Alternativa: azul-elétrico --accent: #3D7DFF; */
+  --accent: #E63946;
+  --accent-contrast: #0F0F10;
+
+  /* Estados semânticos (mantêm a paleta discreta, só usados quando
+     realmente necessário: sucesso de PR, erro de validação, etc). */
+  --ok: #4CAF6D;
+  --warn: #E6B93D;
+  --danger: #E63946;
+
+  /* Tipografia */
+  --font-mono: 'JetBrains Mono', 'Space Mono', ui-monospace, 'SFMono-Regular', monospace;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Cantos retos (ou raio mínimo) */
+  --radius: 2px;
+
+  /* Espaçamento base (grid de 4px) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  /* Altura mínima de alvo de toque (mobile-first, modo treino ativo) */
+  --tap-target: 48px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  margin: 0 0 var(--space-3);
+  letter-spacing: -0.01em;
+}
+
+/* Números/dados sempre em monoespaçada */
+.mono,
+.num,
+input[type="number"] {
+  font-family: var(--font-mono);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+p {
+  color: var(--text-muted);
+}
+
+.surface {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.container {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-4);
+}
+
+/* Botões — grandes o suficiente para toque no modo treino */
+button,
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--tap-target);
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:hover,
+.btn:hover {
+  border-color: var(--text-muted);
+}
+
+button.primary,
+.btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+}
+
+button.danger,
+.btn.danger {
+  background: transparent;
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Inputs */
+input,
+select,
+textarea {
+  width: 100%;
+  min-height: var(--tap-target);
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface-alt);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+label {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: var(--space-1);
+}
+
+/* Estado vazio */
+.empty-state {
+  padding: var(--space-6) var(--space-4);
+  text-align: center;
+  color: var(--text-muted);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+}
+
+/* Utilitário: badge */
+.badge {
+  display: inline-block;
+  padding: 2px var(--space-2);
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.badge.accent {
+  border-color: var(--accent);
+  color: var(--accent);
+}
