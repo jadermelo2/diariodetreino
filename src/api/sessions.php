@@ -14,6 +14,11 @@ require __DIR__ . '/../lib/api_helpers.php';
  * cada treino pode ser lido/escrito isoladamente.
  *
  * GET    ?id=xxx        -> retorna uma sessão específica
+ * GET    ?historico_exercicio=xxx&excluir_sessao=yyy (opcional)
+ *                        -> última série registrada desse exercício em
+ *                           qualquer sessão anterior (usado pelo modo treino
+ *                           ativo para mostrar "Última vez: 3×10 com 40kg"
+ *                           e pré-preencher reps/carga)
  * GET                    -> lista todas as sessões (mais recentes primeiro)
  * POST                   -> cria uma sessão nova
  *   body: { rotina_id?: string|null, data?: "YYYY-MM-DD" }
@@ -58,6 +63,41 @@ function list_session_files(string $sessionsDir): array
 
 switch ($method) {
     case 'GET':
+        if (isset($_GET['historico_exercicio'])) {
+            $exercicioId = trim((string) $_GET['historico_exercicio']);
+            if ($exercicioId === '') {
+                json_error('Parâmetro "historico_exercicio" inválido.', 422);
+            }
+
+            // Exclui a sessão em andamento da busca, para "última vez" nunca
+            // refletir séries que acabaram de ser registradas agora mesmo.
+            $excluirSessao = isset($_GET['excluir_sessao']) ? (string) $_GET['excluir_sessao'] : null;
+
+            // Arquivos começam com a data (YYYY-MM-DD-{id}.json), então
+            // ordenar e inverter dá a ordem cronológica mais recente primeiro.
+            $arquivosRecentes = array_reverse(list_session_files($sessionsDir));
+
+            foreach ($arquivosRecentes as $file) {
+                $sessao = read_json($file);
+
+                if ($excluirSessao !== null && ($sessao['id'] ?? null) === $excluirSessao) {
+                    continue;
+                }
+
+                foreach ($sessao['exercicios'] ?? [] as $item) {
+                    if (($item['exercicio_id'] ?? null) === $exercicioId && !empty($item['series'])) {
+                        json_response([
+                            'encontrado' => true,
+                            'data' => $sessao['data'] ?? null,
+                            'series' => $item['series'],
+                        ]);
+                    }
+                }
+            }
+
+            json_response(['encontrado' => false]);
+        }
+
         $id = query_id();
 
         if ($id !== null) {

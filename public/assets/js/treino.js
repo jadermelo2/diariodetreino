@@ -18,11 +18,21 @@
   var progressoEl = document.getElementById('ativo-progresso');
   var fimAvisoEl = document.getElementById('ativo-fim-aviso');
   var nomeExercicioEl = document.getElementById('ativo-exercicio-nome');
+  var ultimaVezEl = document.getElementById('ultima-vez');
   var seriesListaEl = document.getElementById('ativo-series-lista');
   var formSerie = document.getElementById('form-serie');
   var inputReps = document.getElementById('input-reps');
   var inputCarga = document.getElementById('input-carga');
   var serieErroEl = document.getElementById('serie-erro');
+
+  var btnNotaToggle = document.getElementById('btn-nota-toggle');
+  var notaFieldEl = document.getElementById('nota-field');
+  var inputNota = document.getElementById('input-nota');
+
+  var usarPadraoPromptEl = document.getElementById('usar-padrao-prompt');
+  var usarPadraoTextoEl = document.getElementById('usar-padrao-texto');
+  var btnUsarPadrao = document.getElementById('btn-usar-padrao');
+  var btnUsarPadraoDispensar = document.getElementById('btn-usar-padrao-dispensar');
 
   var restTimerEl = document.getElementById('rest-timer');
   var restLabelEl = document.getElementById('rest-label');
@@ -53,11 +63,14 @@
     exerciseIds: [],
     currentIndex: -1,
     sessionData: null,
+    overrides: {}, // exercicio_id -> {reps, carga} definido via "usar como padrão"
   };
 
   var restInterval = null;
   var restRemaining = 0;
   var pickerModoAdicionar = false;
+  var historicoCache = {}; // exercicio_id -> { encontrado, data, series } (ou null enquanto carrega)
+  var sugestaoAtual = null; // {reps, carga} sugerido para a próxima série do exercício atual
 
   // ---- inicialização ----
   Promise.all([
@@ -103,6 +116,17 @@
   restMenos.addEventListener('click', function () { ajustarDescanso(-15); });
   restMais.addEventListener('click', function () { ajustarDescanso(15); });
   restPular.addEventListener('click', pararDescanso);
+
+  btnNotaToggle.addEventListener('click', function () {
+    var abrindo = notaFieldEl.style.display === 'none';
+    notaFieldEl.style.display = abrindo ? '' : 'none';
+    if (abrindo) {
+      inputNota.focus();
+    }
+  });
+
+  btnUsarPadrao.addEventListener('click', aplicarUsarComoPadrao);
+  btnUsarPadraoDispensar.addEventListener('click', esconderPromptUsarPadrao);
 
   // ---- tela: setup ----
 
@@ -196,6 +220,7 @@
           Math.max(saved.currentIndex || 0, 0),
           Math.max(state.exerciseIds.length - 1, 0)
         );
+        state.overrides = (saved.overrides && typeof saved.overrides === 'object') ? saved.overrides : {};
 
         if (state.exerciseIds.length === 0) {
           mostrarView('ativo');
@@ -217,6 +242,7 @@
       sessionId: state.sessionId,
       exerciseIds: state.exerciseIds,
       currentIndex: state.currentIndex,
+      overrides: state.overrides,
     }));
   }
 
@@ -249,6 +275,9 @@
   function renderAtivo() {
     pararDescanso();
     serieErroEl.textContent = '';
+    esconderPromptUsarPadrao();
+    notaFieldEl.style.display = 'none';
+    inputNota.value = '';
 
     var exId = exercicioAtualId();
     var ex = exerciciosPorId[exId];
@@ -256,7 +285,6 @@
     progressoEl.textContent = (state.currentIndex + 1) + '/' + state.exerciseIds.length;
     nomeExercicioEl.textContent = ex ? ex.nome : '(exercício removido da biblioteca)';
 
-    var atingiuFimRotina = state.rotinaId !== null && state.currentIndex === state.exerciseIds.length - 1;
     fimAvisoEl.classList.toggle('show', false);
 
     var entrada = entradaSessaoDoExercicio(exId);
@@ -268,14 +296,109 @@
       var html = '';
       series.forEach(function (s, i) {
         html += '<li><span class="set-index">#' + (i + 1) + '</span>' +
-          '<span class="set-value">' + s.reps + ' reps &times; ' + formatarCarga(s.carga) + 'kg</span></li>';
+          '<span class="set-value">' + s.reps + ' reps &times; ' + formatarCarga(s.carga) + 'kg</span>' +
+          (s.nota ? '<span class="set-nota">📝 ' + escapeHtml(s.nota) + '</span>' : '') +
+          '</li>';
       });
       seriesListaEl.innerHTML = html;
     }
 
+    ultimaVezEl.style.display = 'none';
+    ultimaVezEl.textContent = '';
     inputReps.value = '';
     inputCarga.value = '';
     inputReps.focus();
+
+    carregarHistoricoSeNecessario(exId).then(function () {
+      // o usuário pode ter trocado de exercício enquanto o fetch corria
+      if (exercicioAtualId() === exId) {
+        aplicarSugestao(exId);
+      }
+    });
+  }
+
+  // ---- última vez / sugestão de reps+carga ----
+
+  function carregarHistoricoSeNecessario(exId) {
+    if (Object.prototype.hasOwnProperty.call(historicoCache, exId)) {
+      return Promise.resolve(historicoCache[exId]);
+    }
+
+    var url = API_SESSIONS + '?historico_exercicio=' + encodeURIComponent(exId) +
+      '&excluir_sessao=' + encodeURIComponent(state.sessionId);
+
+    return fetch(url)
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        historicoCache[exId] = data;
+        return data;
+      })
+      .catch(function () {
+        historicoCache[exId] = { encontrado: false };
+        return historicoCache[exId];
+      });
+  }
+
+  function calcularSugestao(exId, indiceProximaSerie) {
+    if (state.overrides[exId]) {
+      return state.overrides[exId];
+    }
+
+    var hist = historicoCache[exId];
+    if (!hist || !hist.encontrado || !hist.series || hist.series.length === 0) {
+      return null;
+    }
+
+    var slot = hist.series[indiceProximaSerie] || hist.series[hist.series.length - 1];
+    return { reps: slot.reps, carga: slot.carga };
+  }
+
+  function aplicarSugestao(exId) {
+    var entrada = entradaSessaoDoExercicio(exId);
+    var indiceProximaSerie = entrada ? entrada.series.length : 0;
+
+    sugestaoAtual = calcularSugestao(exId, indiceProximaSerie);
+
+    if (sugestaoAtual) {
+      inputReps.value = sugestaoAtual.reps;
+      inputCarga.value = formatarCarga(sugestaoAtual.carga);
+    }
+
+    var hist = historicoCache[exId];
+    if (hist && hist.encontrado && hist.series && hist.series.length > 0) {
+      var ultima = hist.series[hist.series.length - 1];
+      ultimaVezEl.textContent = 'Última vez (' + hist.data + '): ' +
+        hist.series.length + '×' + ultima.reps + ' com ' + formatarCarga(ultima.carga) + 'kg';
+      ultimaVezEl.style.display = '';
+    } else {
+      ultimaVezEl.style.display = 'none';
+    }
+  }
+
+  function mostrarPromptUsarPadrao(exId, reps, carga) {
+    usarPadraoTextoEl.textContent = 'Usar ' + reps + '×' + formatarCarga(carga) + 'kg como padrão a partir daqui?';
+    usarPadraoPromptEl.dataset.exercicio = exId;
+    usarPadraoPromptEl.dataset.reps = reps;
+    usarPadraoPromptEl.dataset.carga = carga;
+    usarPadraoPromptEl.style.display = '';
+  }
+
+  function esconderPromptUsarPadrao() {
+    usarPadraoPromptEl.style.display = 'none';
+  }
+
+  function aplicarUsarComoPadrao() {
+    var exId = usarPadraoPromptEl.dataset.exercicio;
+    var reps = parseInt(usarPadraoPromptEl.dataset.reps, 10);
+    var carga = parseFloat(usarPadraoPromptEl.dataset.carga);
+
+    if (!exId) {
+      return;
+    }
+
+    state.overrides[exId] = { reps: reps, carga: carga };
+    salvarEstado();
+    esconderPromptUsarPadrao();
   }
 
   function onRegistrarSerie(e) {
@@ -295,11 +418,13 @@
     }
 
     var exId = exercicioAtualId();
+    var nota = inputNota.value.trim();
+    var sugestaoUsada = sugestaoAtual;
 
     fetch(API_SESSIONS + '?id=' + encodeURIComponent(state.sessionId), {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'add_set', exercicio_id: exId, reps: reps, carga: carga }),
+      body: JSON.stringify({ action: 'add_set', exercicio_id: exId, reps: reps, carga: carga, nota: nota }),
     })
       .then(function (res) {
         return res.json().then(function (data) { return { ok: res.ok, data: data }; });
@@ -312,6 +437,14 @@
         state.sessionData = result.data;
         renderAtivo();
         iniciarDescanso(parseInt(selectDescanso.value, 10) || 90);
+
+        // se a série registrada diverge do que estava sugerido, oferece
+        // fixar esses novos valores como padrão para as próximas séries
+        var divergiu = sugestaoUsada &&
+          (Number(sugestaoUsada.reps) !== reps || Number(sugestaoUsada.carga) !== carga);
+        if (divergiu) {
+          mostrarPromptUsarPadrao(exId, reps, carga);
+        }
       })
       .catch(function () {
         serieErroEl.textContent = 'Erro de conexão ao registrar série.';

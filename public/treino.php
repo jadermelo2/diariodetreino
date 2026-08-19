@@ -46,11 +46,21 @@ $active = 'treino';
 
       <h2 class="exercise-name" id="ativo-exercicio-nome">—</h2>
 
+      <p class="ultima-vez mono" id="ultima-vez" style="display: none;"></p>
+
       <div class="surface sets-log">
         <div class="sets-log-title">Séries registradas nesta sessão</div>
         <ul class="sets-log-list" id="ativo-series-lista">
           <li class="mono" style="color: var(--text-muted);">Nenhuma série ainda.</li>
         </ul>
+      </div>
+
+      <div class="usar-padrao-prompt" id="usar-padrao-prompt" style="display: none;">
+        <span id="usar-padrao-texto"></span>
+        <div class="usar-padrao-actions">
+          <button type="button" class="btn primary" id="btn-usar-padrao">Usar como padrão</button>
+          <button type="button" class="btn" id="btn-usar-padrao-dispensar">Dispensar</button>
+        </div>
       </div>
 
       <form id="form-serie">
@@ -64,6 +74,14 @@ $active = 'treino';
             <input type="number" id="input-carga" class="mono input-big" inputmode="decimal" min="0" step="0.5" required>
           </div>
         </div>
+
+        <div class="nota-toggle-row">
+          <button type="button" class="nota-toggle" id="btn-nota-toggle">📝 Nota (opcional)</button>
+        </div>
+        <div class="field" id="nota-field" style="display: none;">
+          <input type="text" id="input-nota" maxlength="140" placeholder="Ex: senti dor no ombro, pegada mais aberta...">
+        </div>
+
         <p class="form-error" id="serie-erro"></p>
         <button type="submit" class="primary btn-register">Registrar série</button>
       </form>
