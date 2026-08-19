@@ -13,6 +13,7 @@ $active = $active ?? '';
 $links = [
     'inicio' => ['href' => 'index.php', 'label' => 'Início'],
     'exercicios' => ['href' => 'exercicios.php', 'label' => 'Exercícios'],
+    'rotinas' => ['href' => 'rotinas.php', 'label' => 'Rotinas'],
 ];
 ?>
 <nav class="topnav">
