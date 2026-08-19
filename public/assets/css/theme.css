@@ -819,3 +819,93 @@ label {
   padding: var(--space-4);
   margin-bottom: var(--space-4);
 }
+
+/* ------------------------------------------------------------------ */
+/* Progresso — gráficos de evolução (Chart.js)                        */
+/* ------------------------------------------------------------------ */
+
+.chart-card {
+  padding: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.chart-card h3 {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: var(--space-3);
+}
+
+.chart-canvas-wrap {
+  position: relative;
+  height: 240px;
+}
+
+.record-badge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface-alt);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  margin-bottom: var(--space-4);
+}
+
+.record-badge .record-label {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.record-badge .record-valor {
+  font-family: var(--font-mono);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.pr-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+}
+
+.pr-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.pr-list li:last-child {
+  border-bottom: none;
+}
+
+.pr-list .pr-carga {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.volume-filtro-opcoes {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.volume-filtro-opcoes button {
+  flex: 1;
+  min-height: 40px;
+  font-size: 0.8rem;
+  padding: var(--space-2);
+}
+
+.volume-filtro-opcoes button.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+}
