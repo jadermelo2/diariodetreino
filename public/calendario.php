@@ -22,12 +22,12 @@ $active = 'calendario';
     <div id="calendario-conteudo" style="display: none;">
       <div class="streak-cards">
         <div class="surface streak-card">
-          <span class="streak-emoji">🔥</span>
+          <span class="streak-emoji"><?= svg_icon('flame') ?></span>
           <span class="streak-valor mono" id="streak-atual">0</span>
           <span class="streak-label">Sequência atual</span>
         </div>
         <div class="surface streak-card">
-          <span class="streak-emoji">🏆</span>
+          <span class="streak-emoji"><?= svg_icon('trophy') ?></span>
           <span class="streak-valor mono" id="streak-recorde">0</span>
           <span class="streak-label">Recorde de sequência</span>
         </div>

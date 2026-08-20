@@ -35,7 +35,7 @@ $active = 'peso';
       </div>
 
       <div class="nota-toggle-row">
-        <button type="button" class="nota-toggle" id="btn-medidas-toggle">📏 Medidas corporais (opcional)</button>
+        <button type="button" class="nota-toggle" id="btn-medidas-toggle"><?= svg_icon('ruler') ?> Medidas corporais (opcional)</button>
       </div>
 
       <div id="medidas-campos" style="display: none;">

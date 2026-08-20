@@ -41,7 +41,7 @@ $active = 'treino';
       </div>
 
       <div class="exercise-avisofim" id="ativo-fim-aviso">
-        🏁 Fim da rotina — toque em "Finalizar treino" quando terminar, ou continue registrando séries extras.
+        <?= svg_icon('flag') ?> Fim da rotina — toque em "Finalizar treino" quando terminar, ou continue registrando séries extras.
       </div>
 
       <h2 class="exercise-name" id="ativo-exercicio-nome">—</h2>
@@ -76,7 +76,7 @@ $active = 'treino';
         </div>
 
         <div class="nota-toggle-row">
-          <button type="button" class="nota-toggle" id="btn-nota-toggle">📝 Nota (opcional)</button>
+          <button type="button" class="nota-toggle" id="btn-nota-toggle"><?= svg_icon('pencil') ?> Nota (opcional)</button>
         </div>
         <div class="field" id="nota-field" style="display: none;">
           <input type="text" id="input-nota" maxlength="140" placeholder="Ex: senti dor no ombro, pegada mais aberta...">
@@ -116,7 +116,7 @@ $active = 'treino';
 
     <!-- ===================== TELA: resumo final ===================== -->
     <div id="view-fim" style="display: none;">
-      <h1>Treino finalizado 💪</h1>
+      <h1><?= svg_icon('check-circle') ?> Treino finalizado</h1>
       <div class="surface finish-summary">
         <p id="fim-resumo" class="mono" style="color: var(--text);"></p>
       </div>

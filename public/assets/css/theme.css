@@ -221,6 +221,17 @@ label {
   width: 100%;
 }
 
+/* Utilitário: ícone de linha (SVG). Tamanho em 1em pra herdar o
+   font-size do elemento ao redor — troca de contexto (nav, botão,
+   badge...) sem precisar de uma classe de tamanho por lugar. */
+.icon {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  vertical-align: -0.125em;
+  flex-shrink: 0;
+}
+
 /* Estado vazio */
 .empty-state {
   padding: var(--space-6) var(--space-4);

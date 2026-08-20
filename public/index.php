@@ -22,47 +22,47 @@ $active = 'inicio';
 
     <div class="home-stats" id="home-stats">
       <div class="surface streak-card">
-        <span class="streak-emoji">🔥</span>
+        <span class="streak-emoji"><?= svg_icon('flame') ?></span>
         <span class="streak-valor mono" id="home-streak">—</span>
         <span class="streak-label">sequência</span>
       </div>
       <div class="surface streak-card">
-        <span class="streak-emoji">📚</span>
+        <span class="streak-emoji"><?= svg_icon('dumbbell') ?></span>
         <span class="streak-valor mono" id="home-exercicios">—</span>
         <span class="streak-label">exercícios</span>
       </div>
       <div class="surface streak-card">
-        <span class="streak-emoji">📅</span>
+        <span class="streak-emoji"><?= svg_icon('calendar') ?></span>
         <span class="streak-valor mono" id="home-dias">—</span>
         <span class="streak-label">dias treinados</span>
       </div>
     </div>
 
-    <a href="treino.php" class="btn primary full-width home-cta">▶ Iniciar treino</a>
+    <a href="treino.php" class="btn primary full-width home-cta"><?= svg_icon('play') ?> Iniciar treino</a>
 
     <div class="home-grid">
       <a class="home-card" href="progresso.php">
-        <span class="home-card-emoji">📈</span>
+        <span class="home-card-emoji"><?= svg_icon('trending-up') ?></span>
         <span class="home-card-label">Progresso</span>
       </a>
       <a class="home-card" href="peso.php">
-        <span class="home-card-emoji">⚖️</span>
+        <span class="home-card-emoji"><?= svg_icon('scale') ?></span>
         <span class="home-card-label">Peso</span>
       </a>
       <a class="home-card" href="calendario.php">
-        <span class="home-card-emoji">🗓️</span>
+        <span class="home-card-emoji"><?= svg_icon('calendar') ?></span>
         <span class="home-card-label">Calendário</span>
       </a>
       <a class="home-card" href="exercicios.php">
-        <span class="home-card-emoji">🏋️</span>
+        <span class="home-card-emoji"><?= svg_icon('dumbbell') ?></span>
         <span class="home-card-label">Exercícios</span>
       </a>
       <a class="home-card" href="rotinas.php">
-        <span class="home-card-emoji">📋</span>
+        <span class="home-card-emoji"><?= svg_icon('clipboard') ?></span>
         <span class="home-card-label">Rotinas</span>
       </a>
       <a class="home-card" href="backup.php">
-        <span class="home-card-emoji">💾</span>
+        <span class="home-card-emoji"><?= svg_icon('save') ?></span>
         <span class="home-card-label">Backup</span>
       </a>
     </div>

@@ -168,7 +168,7 @@
 
     var html = '';
     prs.slice().reverse().forEach(function (pr) {
-      html += '<li><span>🏆 ' + escapeHtml(pr.data) + '</span>' +
+      html += '<li><span>' + ICONS.trophy + ' ' + escapeHtml(pr.data) + '</span>' +
         '<span class="pr-carga">' + formatarNumero(pr.carga) + 'kg</span></li>';
     });
     prListaEl.innerHTML = html;

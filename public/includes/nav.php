@@ -12,17 +12,19 @@
  * (string) deve ser definida antes do include para destacar a tela atual.
  */
 
+require_once __DIR__ . '/icons.php';
+
 $active = $active ?? '';
 
 $links = [
-    'inicio' => ['href' => 'index.php', 'label' => 'Início', 'icon' => '🏠'],
-    'treino' => ['href' => 'treino.php', 'label' => 'Treino', 'icon' => '▶️'],
-    'progresso' => ['href' => 'progresso.php', 'label' => 'Progresso', 'icon' => '📈'],
-    'peso' => ['href' => 'peso.php', 'label' => 'Peso', 'icon' => '⚖️'],
-    'calendario' => ['href' => 'calendario.php', 'label' => 'Calendário', 'icon' => '🗓️'],
-    'exercicios' => ['href' => 'exercicios.php', 'label' => 'Exercícios', 'icon' => '🏋️'],
-    'rotinas' => ['href' => 'rotinas.php', 'label' => 'Rotinas', 'icon' => '📋'],
-    'backup' => ['href' => 'backup.php', 'label' => 'Backup', 'icon' => '💾'],
+    'inicio' => ['href' => 'index.php', 'label' => 'Início', 'icon' => 'home'],
+    'treino' => ['href' => 'treino.php', 'label' => 'Treino', 'icon' => 'play'],
+    'progresso' => ['href' => 'progresso.php', 'label' => 'Progresso', 'icon' => 'trending-up'],
+    'peso' => ['href' => 'peso.php', 'label' => 'Peso', 'icon' => 'scale'],
+    'calendario' => ['href' => 'calendario.php', 'label' => 'Calendário', 'icon' => 'calendar'],
+    'exercicios' => ['href' => 'exercicios.php', 'label' => 'Exercícios', 'icon' => 'dumbbell'],
+    'rotinas' => ['href' => 'rotinas.php', 'label' => 'Rotinas', 'icon' => 'clipboard'],
+    'backup' => ['href' => 'backup.php', 'label' => 'Backup', 'icon' => 'save'],
 ];
 ?>
 <script>
@@ -49,18 +51,19 @@ $links = [
       <a href="<?= htmlspecialchars($link['href']) ?>"
          class="sidenav-link <?= $active === $key ? 'active' : '' ?>"
          title="<?= htmlspecialchars($link['label']) ?>">
-        <span class="sidenav-icon"><?= $link['icon'] ?></span>
+        <span class="sidenav-icon"><?= svg_icon($link['icon']) ?></span>
         <span class="sidenav-label"><?= htmlspecialchars($link['label']) ?></span>
       </a>
     <?php endforeach; ?>
   </nav>
 
   <button type="button" class="sidenav-expand-btn" id="sidenav-expand-btn" aria-label="Expandir menu">
-    <span class="sidenav-icon">»</span>
+    <span class="sidenav-icon sidenav-expand-chevron"><?= svg_icon('chevron-right') ?></span>
     <span class="sidenav-label">Recolher</span>
   </button>
 </aside>
 <div class="sidenav-backdrop" id="sidenav-backdrop"></div>
+<script src="assets/js/icons.js"></script>
 <script>
   (function () {
     function definirExpandido(expandido) {

@@ -100,7 +100,7 @@
           restaurarErroEl.textContent = result.data.error || 'Erro ao restaurar backup.';
           return;
         }
-        restaurarSucessoEl.textContent = '✔ ' + (result.data.mensagem || 'Dados restaurados com sucesso.') +
+        restaurarSucessoEl.innerHTML = ICONS.check + ' ' + escapeHtml(result.data.mensagem || 'Dados restaurados com sucesso.') +
           ' Recarregue as outras telas para ver os dados atualizados.';
         restaurarSucessoEl.style.display = '';
         inputRestaurar.value = '';

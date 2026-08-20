@@ -37,7 +37,7 @@ $active = 'backup';
     <div class="surface chart-card">
       <h3>Restaurar backup</h3>
       <p class="backup-warning">
-        ⚠️ Restaurar <strong>substitui todos os dados atuais</strong> pelos dados do arquivo enviado.
+        <?= svg_icon('alert-triangle') ?> Restaurar <strong>substitui todos os dados atuais</strong> pelos dados do arquivo enviado.
         Um backup automático do estado atual é criado antes de restaurar, mas confira o arquivo antes de continuar.
       </p>
 

@@ -30,7 +30,7 @@ $active = 'progresso';
     <div id="progresso-conteudo" style="display: none;">
 
       <div class="record-badge">
-        <span class="record-label">🏆 Recorde atual</span>
+        <span class="record-label"><?= svg_icon('trophy') ?> Recorde atual</span>
         <span class="record-valor mono" id="recorde-valor">—</span>
       </div>
 

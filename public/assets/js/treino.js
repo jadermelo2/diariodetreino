@@ -297,7 +297,7 @@
       series.forEach(function (s, i) {
         html += '<li><span class="set-index">#' + (i + 1) + '</span>' +
           '<span class="set-value">' + s.reps + ' reps &times; ' + formatarCarga(s.carga) + 'kg</span>' +
-          (s.nota ? '<span class="set-nota">📝 ' + escapeHtml(s.nota) + '</span>' : '') +
+          (s.nota ? '<span class="set-nota">' + ICONS.pencil + ' ' + escapeHtml(s.nota) + '</span>' : '') +
           '</li>';
       });
       seriesListaEl.innerHTML = html;
