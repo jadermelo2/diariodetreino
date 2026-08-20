@@ -45,6 +45,7 @@
   var btnTrocar = document.getElementById('btn-trocar-exercicio');
   var btnProximo = document.getElementById('btn-proximo-exercicio');
   var btnFinalizar = document.getElementById('btn-finalizar');
+  var btnCancelarTreino = document.getElementById('btn-cancelar-treino');
 
   var modalPicker = document.getElementById('modal-picker');
   var pickerLista = document.getElementById('picker-lista');
@@ -105,11 +106,18 @@
 
   btnProximo.addEventListener('click', proximoExercicio);
   btnFinalizar.addEventListener('click', finalizarTreino);
+  btnCancelarTreino.addEventListener('click', function () {
+    cancelarTreino();
+  });
 
-  pickerFechar.addEventListener('click', fecharPicker);
+  pickerFechar.addEventListener('click', function () {
+    fecharPicker();
+    cancelarSeSeletorObrigatorioFicouVazio();
+  });
   modalPicker.addEventListener('click', function (e) {
     if (e.target === modalPicker) {
       fecharPicker();
+      cancelarSeSeletorObrigatorioFicouVazio();
     }
   });
 
@@ -605,6 +613,27 @@
 
   // ---- finalizar treino ----
 
+  function contarSeriesRegistradas() {
+    var totalSeries = 0;
+    var exerciciosTrabalhados = 0;
+    (state.sessionData && state.sessionData.exercicios || []).forEach(function (item) {
+      if (item.series.length > 0) {
+        exerciciosTrabalhados++;
+        totalSeries += item.series.length;
+      }
+    });
+    return { totalSeries: totalSeries, exerciciosTrabalhados: exerciciosTrabalhados };
+  }
+
+  function resetarEstadoEmMemoria() {
+    state.sessionId = null;
+    state.rotinaId = null;
+    state.sessionData = null;
+    state.exerciseIds = [];
+    state.currentIndex = -1;
+    state.overrides = {};
+  }
+
   function finalizarTreino() {
     if (!confirm('Finalizar o treino? Você poderá conferir o resumo em seguida.')) {
       return;
@@ -612,28 +641,74 @@
 
     pararDescanso();
 
-    var totalSeries = 0;
-    var exerciciosTrabalhados = 0;
-    (state.sessionData.exercicios || []).forEach(function (item) {
-      if (item.series.length > 0) {
-        exerciciosTrabalhados++;
-        totalSeries += item.series.length;
-      }
-    });
+    var contagem = contarSeriesRegistradas();
 
     var concluir = function () {
       limparEstado();
-      fimResumoEl.textContent = exerciciosTrabalhados + ' exercício(s) trabalhado(s) · ' +
-        totalSeries + ' série(s) registrada(s).';
+      resetarEstadoEmMemoria();
+      fimResumoEl.textContent = contagem.exerciciosTrabalhados + ' exercício(s) trabalhado(s) · ' +
+        contagem.totalSeries + ' série(s) registrada(s).';
       mostrarView('fim');
     };
 
-    if (totalSeries === 0) {
+    if (contagem.totalSeries === 0) {
       fetch(API_SESSIONS + '?id=' + encodeURIComponent(state.sessionId), { method: 'DELETE' })
         .then(concluir)
         .catch(concluir);
     } else {
       concluir();
+    }
+  }
+
+  // ---- cancelar treino (sair sem registrar/manter nada) ----
+
+  /**
+   * Descarta a sessão em andamento (se ela existir e nada foi
+   * registrado, ela nem chegou a ter dado nenhum; se algo foi
+   * registrado, é apagada de verdade) e volta pra tela de escolher
+   * rotina. Diferente de "Finalizar", nunca mostra o resumo — o usuário
+   * está desistindo do treino, não concluindo ele.
+   *
+   * @param {boolean} semConfirmar pula o confirm() — usado quando o
+   *   próprio usuário já deu um sinal claro de "não quero isso" (ex:
+   *   fechou o seletor de exercício obrigatório sem escolher nada).
+   */
+  function cancelarTreino(semConfirmar) {
+    pararDescanso();
+
+    var contagem = contarSeriesRegistradas();
+
+    if (!semConfirmar) {
+      var mensagem = contagem.totalSeries > 0
+        ? 'Cancelar o treino? ' + contagem.totalSeries + ' série(s) registrada(s) nesta sessão serão perdidas.'
+        : 'Cancelar o treino? Nada foi registrado ainda.';
+      if (!confirm(mensagem)) {
+        return;
+      }
+    }
+
+    var sessionIdParaApagar = state.sessionId;
+
+    limparEstado();
+    resetarEstadoEmMemoria();
+    mostrarView('setup');
+    renderSetup();
+
+    if (sessionIdParaApagar) {
+      fetch(API_SESSIONS + '?id=' + encodeURIComponent(sessionIdParaApagar), { method: 'DELETE' }).catch(function () {});
+    }
+  }
+
+  /**
+   * Chamado ao fechar o seletor de exercício. Se ele estava aberto no
+   * modo "obrigatório" (logo no início de um treino livre, ou ao chegar
+   * no fim da lista em treino livre) e o usuário fechou sem escolher
+   * nenhum exercício, não há nada pra mostrar na tela ativa — trata como
+   * "desisti", cancelando a sessão vazia automaticamente.
+   */
+  function cancelarSeSeletorObrigatorioFicouVazio() {
+    if (pickerModoAdicionar && state.exerciseIds.length === 0 && viewAtivo.style.display !== 'none') {
+      cancelarTreino(true);
     }
   }
 

@@ -110,7 +110,8 @@ $active = 'treino';
 
       <div class="workout-actions">
         <button type="button" class="btn" id="btn-proximo-exercicio">Próximo exercício / Pular</button>
-        <button type="button" class="btn danger" id="btn-finalizar">Finalizar treino</button>
+        <button type="button" class="btn primary" id="btn-finalizar">Finalizar treino</button>
+        <button type="button" class="btn danger" id="btn-cancelar-treino">Cancelar treino</button>
       </div>
     </div>
 
