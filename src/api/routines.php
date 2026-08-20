@@ -49,10 +49,19 @@ function normalize_routine_exercises(array $input): array
         $seriesPadrao = (int) ($item['series_padrao'] ?? 3);
         $repsPadrao = (int) ($item['reps_padrao'] ?? 10);
 
+        // carga_padrao é opcional (nem todo exercício tem um peso planejado
+        // ainda) — null quando ausente/vazio, número (inclusive 0, para
+        // exercícios de peso corporal) quando informado.
+        $cargaPadrao = null;
+        if (isset($item['carga_padrao']) && $item['carga_padrao'] !== '' && is_numeric($item['carga_padrao'])) {
+            $cargaPadrao = (float) $item['carga_padrao'];
+        }
+
         $normalized[] = [
             'exercicio_id' => $exercicioId,
             'series_padrao' => $seriesPadrao > 0 ? $seriesPadrao : 3,
             'reps_padrao' => $repsPadrao > 0 ? $repsPadrao : 10,
+            'carga_padrao' => $cargaPadrao,
         ];
     }
 

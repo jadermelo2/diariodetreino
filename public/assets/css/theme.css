@@ -602,28 +602,58 @@ body.sidenav-expanded .sidenav-expand-btn .sidenav-icon {
 /* Rotinas — linhas de exercício dentro do formulário                 */
 /* ------------------------------------------------------------------ */
 
+/* Duas linhas sempre: exercício+remover em cima, séries/reps/carga
+   embaixo — evita espremer 1 select + 3 números + botão numa linha só. */
 .exercicio-linha {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
   gap: var(--space-2);
   align-items: center;
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.exercicio-linha:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
 }
 
 .exercicio-linha select {
-  flex: 3;
-  min-width: 0;
+  grid-column: 1;
 }
 
-.exercicio-linha input[type="number"] {
-  flex: 1;
-  min-width: 0;
+.exercicio-linha .linha-campos-labels {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+.exercicio-linha .linha-campos-labels span {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+.exercicio-linha .linha-campos {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.exercicio-linha .linha-campos input[type="number"] {
   padding-left: var(--space-2);
   padding-right: var(--space-2);
   text-align: center;
 }
 
 .exercicio-linha .remove-linha {
-  flex: 0 0 auto;
   min-width: var(--tap-target);
   padding: 0;
   color: var(--text-muted);
@@ -632,20 +662,6 @@ body.sidenav-expanded .sidenav-expand-btn .sidenav-icon {
 .exercicio-linha .remove-linha:hover {
   color: var(--danger);
   border-color: var(--danger);
-}
-
-/* Em telas bem estreitas o select + 2 inputs numéricos + botão de remover
-   não cabem confortavelmente numa linha só — quebra pro select ocupar a
-   linha inteira e os campos de série/reps ficarem embaixo, ainda toda em
-   toques grandes. */
-@media (max-width: 360px) {
-  .exercicio-linha {
-    flex-wrap: wrap;
-  }
-
-  .exercicio-linha select {
-    flex-basis: 100%;
-  }
 }
 
 .routine-exlist {

@@ -46,7 +46,8 @@ Array de objetos:
     {
       "exercicio_id": "uuid-do-exercicio",
       "series_padrao": 3,
-      "reps_padrao": 10
+      "reps_padrao": 10,
+      "carga_padrao": 40
     }
   ]
 }
@@ -55,6 +56,13 @@ Array de objetos:
 - `exercicios`: lista ordenada (a ordem é a ordem de execução sugerida).
 - `series_padrao` / `reps_padrao`: valores sugeridos ao iniciar um treino
   a partir desta rotina; podem ser ajustados durante a sessão.
+- `carga_padrao` (opcional): peso planejado em kg para esse exercício
+  nesta rotina. `null` quando ainda não foi definido nenhum peso — nesse
+  caso, no modo treino ativo (Etapa 4/5) os campos de carga começam
+  vazios até o usuário registrar a primeira série. É atualizado
+  automaticamente quando o usuário toca em "Salvar como padrão da
+  rotina" durante um treino (ver Etapa 4/5), ou editado manualmente na
+  tela de Rotinas.
 
 ---
 

@@ -58,7 +58,7 @@ $active = 'treino';
       <div class="usar-padrao-prompt" id="usar-padrao-prompt" style="display: none;">
         <span id="usar-padrao-texto"></span>
         <div class="usar-padrao-actions">
-          <button type="button" class="btn primary" id="btn-usar-padrao">Usar como padrão</button>
+          <button type="button" class="btn primary" id="btn-usar-padrao">Salvar como padrão da rotina</button>
           <button type="button" class="btn" id="btn-usar-padrao-dispensar">Dispensar</button>
         </div>
       </div>

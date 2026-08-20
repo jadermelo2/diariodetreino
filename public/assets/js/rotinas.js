@@ -118,8 +118,10 @@
       itens.forEach(function (item) {
         var ex = exerciciosPorId[item.exercicio_id];
         var nome = ex ? ex.nome : '(exercício removido)';
-        html += '<li><span>' + escapeHtml(nome) + '</span><span class="ex-sets">' +
-          item.series_padrao + '&times;' + item.reps_padrao + '</span></li>';
+        var temCarga = item.carga_padrao !== null && item.carga_padrao !== undefined;
+        var sets = item.series_padrao + '&times;' + item.reps_padrao +
+          (temCarga ? ' @ ' + formatarNumero(item.carga_padrao) + 'kg' : '');
+        html += '<li><span>' + escapeHtml(nome) + '</span><span class="ex-sets">' + sets + '</span></li>';
       });
       html += '</ul>';
     }
@@ -186,11 +188,19 @@
       options += '<option value="' + escapeHtml(ex.id) + '"' + selected + '>' + escapeHtml(ex.nome) + '</option>';
     });
 
+    var carga = item && item.carga_padrao !== null && item.carga_padrao !== undefined ? item.carga_padrao : '';
+
     div.innerHTML =
       '<select class="linha-exercicio">' + options + '</select>' +
-      '<input type="number" class="linha-series mono" min="1" placeholder="séries" value="' + (item ? item.series_padrao : 3) + '">' +
-      '<input type="number" class="linha-reps mono" min="1" placeholder="reps" value="' + (item ? item.reps_padrao : 10) + '">' +
-      '<button type="button" class="remove-linha" aria-label="Remover">&times;</button>';
+      '<button type="button" class="remove-linha" aria-label="Remover">&times;</button>' +
+      '<div class="linha-campos-labels">' +
+      '  <span>Séries</span><span>Reps</span><span>Carga (kg)</span>' +
+      '</div>' +
+      '<div class="linha-campos">' +
+      '  <input type="number" class="linha-series mono" min="1" placeholder="séries" value="' + (item ? item.series_padrao : 3) + '">' +
+      '  <input type="number" class="linha-reps mono" min="1" placeholder="reps" value="' + (item ? item.reps_padrao : 10) + '">' +
+      '  <input type="number" class="linha-carga mono" min="0" step="0.5" placeholder="kg" value="' + carga + '">' +
+      '</div>';
 
     div.querySelector('.remove-linha').addEventListener('click', function () {
       div.remove();
@@ -213,10 +223,13 @@
         formErro.textContent = 'Selecione um exercício em todas as linhas (ou remova a linha vazia).';
         return;
       }
+      var cargaValor = linha.querySelector('.linha-carga').value;
+
       exerciciosPayload.push({
         exercicio_id: exercicioId,
         series_padrao: parseInt(linha.querySelector('.linha-series').value, 10) || 3,
         reps_padrao: parseInt(linha.querySelector('.linha-reps').value, 10) || 10,
+        carga_padrao: cargaValor === '' ? null : parseFloat(cargaValor),
       });
     }
 
@@ -290,6 +303,11 @@
       .catch(function () {
         alert('Erro ao excluir rotina.');
       });
+  }
+
+  function formatarNumero(valor) {
+    var num = Number(valor);
+    return num % 1 === 0 ? String(num) : String(num.toFixed(1));
   }
 
   function escapeHtml(str) {

@@ -64,7 +64,6 @@
     exerciseIds: [],
     currentIndex: -1,
     sessionData: null,
-    overrides: {}, // exercicio_id -> {reps, carga} definido via "usar como padrão"
   };
 
   var restInterval = null;
@@ -228,7 +227,6 @@
           Math.max(saved.currentIndex || 0, 0),
           Math.max(state.exerciseIds.length - 1, 0)
         );
-        state.overrides = (saved.overrides && typeof saved.overrides === 'object') ? saved.overrides : {};
 
         if (state.exerciseIds.length === 0) {
           mostrarView('ativo');
@@ -250,7 +248,6 @@
       sessionId: state.sessionId,
       exerciseIds: state.exerciseIds,
       currentIndex: state.currentIndex,
-      overrides: state.overrides,
     }));
   }
 
@@ -347,18 +344,50 @@
       });
   }
 
+  /**
+   * Item de exercícios[] da rotina atual pra esse exercício (séries/reps/
+   * carga planejados), ou null se o treino é livre ou o exercício não faz
+   * parte da rotina escolhida (ex: adicionado via "Trocar exercício").
+   */
+  function rotinaExercicioDefault(exId) {
+    if (!state.rotinaId) {
+      return null;
+    }
+    var rotina = rotinas.filter(function (r) { return r.id === state.rotinaId; })[0];
+    if (!rotina) {
+      return null;
+    }
+    return (rotina.exercicios || []).filter(function (e) { return e.exercicio_id === exId; })[0] || null;
+  }
+
+  /**
+   * Sugestão de reps/carga pra próxima série de um exercício, nessa ordem:
+   *   1. o que foi registrado na série anterior DESTE MESMO exercício
+   *      nesta sessão (repete automaticamente até o usuário mudar algo);
+   *   2. a última vez que esse exercício foi feito, numa sessão passada
+   *      (mesma posição de série, ou a última disponível);
+   *   3. o padrão cadastrado na rotina (série 1 de um exercício que nunca
+   *      foi feito antes nesta rotina).
+   */
   function calcularSugestao(exId, indiceProximaSerie) {
-    if (state.overrides[exId]) {
-      return state.overrides[exId];
+    var entrada = entradaSessaoDoExercicio(exId);
+    if (entrada && entrada.series.length > 0) {
+      var ultimaDestaSessao = entrada.series[entrada.series.length - 1];
+      return { reps: ultimaDestaSessao.reps, carga: ultimaDestaSessao.carga };
     }
 
     var hist = historicoCache[exId];
-    if (!hist || !hist.encontrado || !hist.series || hist.series.length === 0) {
-      return null;
+    if (hist && hist.encontrado && hist.series && hist.series.length > 0) {
+      var slot = hist.series[indiceProximaSerie] || hist.series[hist.series.length - 1];
+      return { reps: slot.reps, carga: slot.carga };
     }
 
-    var slot = hist.series[indiceProximaSerie] || hist.series[hist.series.length - 1];
-    return { reps: slot.reps, carga: slot.carga };
+    var padrao = rotinaExercicioDefault(exId);
+    if (padrao && padrao.reps_padrao) {
+      return { reps: padrao.reps_padrao, carga: padrao.carga_padrao !== null && padrao.carga_padrao !== undefined ? padrao.carga_padrao : 0 };
+    }
+
+    return null;
   }
 
   function aplicarSugestao(exId) {
@@ -379,12 +408,26 @@
         hist.series.length + '×' + ultima.reps + ' com ' + formatarCarga(ultima.carga) + 'kg';
       ultimaVezEl.style.display = '';
     } else {
-      ultimaVezEl.style.display = 'none';
+      var padrao = rotinaExercicioDefault(exId);
+      if (padrao && padrao.reps_padrao) {
+        ultimaVezEl.textContent = 'Padrão da rotina: ' + padrao.series_padrao + '×' + padrao.reps_padrao +
+          (padrao.carga_padrao !== null && padrao.carga_padrao !== undefined ? ' com ' + formatarCarga(padrao.carga_padrao) + 'kg' : '');
+        ultimaVezEl.style.display = '';
+      } else {
+        ultimaVezEl.style.display = 'none';
+      }
     }
   }
 
   function mostrarPromptUsarPadrao(exId, reps, carga) {
-    usarPadraoTextoEl.textContent = 'Usar ' + reps + '×' + formatarCarga(carga) + 'kg como padrão a partir daqui?';
+    // só faz sentido oferecer "salvar como padrão da rotina" quando o
+    // exercício atual realmente faz parte da rotina em andamento
+    if (!rotinaExercicioDefault(exId)) {
+      return;
+    }
+
+    usarPadraoTextoEl.textContent = 'Salvar ' + reps + '×' + formatarCarga(carga) +
+      'kg como padrão desta rotina, pros próximos treinos?';
     usarPadraoPromptEl.dataset.exercicio = exId;
     usarPadraoPromptEl.dataset.reps = reps;
     usarPadraoPromptEl.dataset.carga = carga;
@@ -400,13 +443,49 @@
     var reps = parseInt(usarPadraoPromptEl.dataset.reps, 10);
     var carga = parseFloat(usarPadraoPromptEl.dataset.carga);
 
-    if (!exId) {
+    if (!exId || !state.rotinaId) {
       return;
     }
 
-    state.overrides[exId] = { reps: reps, carga: carga };
-    salvarEstado();
-    esconderPromptUsarPadrao();
+    var rotina = rotinas.filter(function (r) { return r.id === state.rotinaId; })[0];
+    if (!rotina) {
+      return;
+    }
+
+    var novosExercicios = (rotina.exercicios || []).map(function (item) {
+      if (item.exercicio_id !== exId) {
+        return item;
+      }
+      return Object.assign({}, item, { reps_padrao: reps, carga_padrao: carga });
+    });
+
+    var btnTexto = btnUsarPadrao.textContent;
+    btnUsarPadrao.disabled = true;
+    btnUsarPadrao.textContent = 'Salvando...';
+
+    fetch(API_ROTINAS + '?id=' + encodeURIComponent(state.rotinaId), {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ exercicios: novosExercicios }),
+    })
+      .then(function (res) { return res.json(); })
+      .then(function (rotinaAtualizada) {
+        var idx = -1;
+        for (var i = 0; i < rotinas.length; i++) {
+          if (rotinas[i].id === state.rotinaId) { idx = i; break; }
+        }
+        if (idx !== -1) {
+          rotinas[idx] = rotinaAtualizada;
+        }
+        esconderPromptUsarPadrao();
+      })
+      .catch(function () {
+        alert('Erro ao salvar como padrão da rotina. Tente novamente.');
+      })
+      .finally(function () {
+        btnUsarPadrao.disabled = false;
+        btnUsarPadrao.textContent = btnTexto;
+      });
   }
 
   function onRegistrarSerie(e) {
@@ -447,7 +526,9 @@
         iniciarDescanso(parseInt(selectDescanso.value, 10) || 90);
 
         // se a série registrada diverge do que estava sugerido, oferece
-        // fixar esses novos valores como padrão para as próximas séries
+        // salvar esses novos valores como padrão da rotina (só aparece
+        // de fato se o exercício pertencer à rotina em andamento — ver
+        // mostrarPromptUsarPadrao)
         var divergiu = sugestaoUsada &&
           (Number(sugestaoUsada.reps) !== reps || Number(sugestaoUsada.carga) !== carga);
         if (divergiu) {
@@ -631,7 +712,6 @@
     state.sessionData = null;
     state.exerciseIds = [];
     state.currentIndex = -1;
-    state.overrides = {};
   }
 
   function finalizarTreino() {
