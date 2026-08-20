@@ -909,3 +909,74 @@ label {
   border-color: var(--accent);
   color: var(--accent-contrast);
 }
+
+/* ------------------------------------------------------------------ */
+/* Peso corporal e medidas                                            */
+/* ------------------------------------------------------------------ */
+
+.peso-form {
+  padding: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.peso-form .input-row {
+  grid-template-columns: 1fr 1fr;
+}
+
+.medidas-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.weight-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+
+.weight-list-item:last-child {
+  border-bottom: none;
+}
+
+.weight-list-item .weight-info {
+  min-width: 0;
+}
+
+.weight-list-item .weight-data {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  display: block;
+}
+
+.weight-list-item .weight-peso {
+  font-family: var(--font-mono);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.weight-list-item .weight-medidas {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-family: var(--font-mono);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.weight-list-item .weight-actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.weight-list-item .weight-actions button {
+  min-height: 36px;
+  padding: var(--space-1) var(--space-2);
+  font-size: 0.8rem;
+}
