@@ -207,6 +207,11 @@ label {
   margin-bottom: var(--space-1);
 }
 
+/* Utilitário: largura cheia — usado em botões/links de CTA nas telas */
+.full-width {
+  width: 100%;
+}
+
 /* Estado vazio */
 .empty-state {
   padding: var(--space-6) var(--space-4);
@@ -507,6 +512,20 @@ label {
 .exercicio-linha .remove-linha:hover {
   color: var(--danger);
   border-color: var(--danger);
+}
+
+/* Em telas bem estreitas o select + 2 inputs numéricos + botão de remover
+   não cabem confortavelmente numa linha só — quebra pro select ocupar a
+   linha inteira e os campos de série/reps ficarem embaixo, ainda toda em
+   toques grandes. */
+@media (max-width: 360px) {
+  .exercicio-linha {
+    flex-wrap: wrap;
+  }
+
+  .exercicio-linha select {
+    flex-basis: 100%;
+  }
 }
 
 .routine-exlist {
@@ -829,7 +848,8 @@ label {
   margin-bottom: var(--space-5);
 }
 
-.chart-card h3 {
+.chart-card h3,
+.calendar-card h3 {
   font-family: var(--font-mono);
   font-size: 0.8rem;
   text-transform: uppercase;
@@ -976,7 +996,7 @@ label {
 }
 
 .weight-list-item .weight-actions button {
-  min-height: 36px;
+  min-height: 40px;
   padding: var(--space-1) var(--space-2);
   font-size: 0.8rem;
 }
@@ -1137,8 +1157,83 @@ label {
 
 .backup-list-item .btn {
   flex-shrink: 0;
-  min-height: 36px;
+  min-height: 40px;
   padding: var(--space-1) var(--space-3);
   font-size: 0.8rem;
   text-decoration: none;
+}
+
+/* ------------------------------------------------------------------ */
+/* Início — dashboard/hub de navegação                                */
+/* ------------------------------------------------------------------ */
+
+.home-hero {
+  margin-bottom: var(--space-5);
+}
+
+.home-hero h1 {
+  color: var(--accent);
+  letter-spacing: 0.02em;
+  margin-bottom: var(--space-1);
+}
+
+.home-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+}
+
+.home-stats .streak-card {
+  padding: var(--space-3);
+}
+
+.home-stats .streak-valor {
+  font-size: 1.4rem;
+}
+
+.home-cta {
+  margin-bottom: var(--space-6);
+}
+
+.home-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.home-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--space-3);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  text-align: center;
+  min-height: 96px;
+}
+
+.home-card:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.home-card .home-card-emoji {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.home-card .home-card-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+@media (min-width: 480px) {
+  .home-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }

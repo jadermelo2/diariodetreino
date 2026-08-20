@@ -44,7 +44,7 @@ $active = 'rotinas';
         <div class="field">
           <label>Exercícios</label>
           <div id="rotina-exercicios-linhas"></div>
-          <button type="button" class="btn" id="btn-add-linha" style="width: 100%; margin-top: var(--space-2);">+ Adicionar exercício</button>
+          <button type="button" class="btn full-width" id="btn-add-linha" style="margin-top: var(--space-2);">+ Adicionar exercício</button>
         </div>
 
         <p class="form-error" id="form-erro"></p>

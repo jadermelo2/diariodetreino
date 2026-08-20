@@ -20,13 +20,13 @@ $active = 'backup';
     <div class="surface chart-card">
       <h3>Exportar CSV</h3>
       <p>Baixa todo o histórico de séries registradas (data, exercício, série, reps, carga e nota) num arquivo CSV, pra abrir numa planilha.</p>
-      <a href="api/export.php" class="btn primary" style="width: 100%; text-decoration: none;">Exportar CSV</a>
+      <a href="api/export.php" class="btn primary full-width">Exportar CSV</a>
     </div>
 
     <div class="surface chart-card">
       <h3>Backup</h3>
       <p>Compacta toda a pasta de dados (exercícios, rotinas, sessões e peso corporal) num arquivo .zip com data e hora, salvo em <code class="mono">/backups</code>.</p>
-      <button type="button" class="btn primary" id="btn-criar-backup" style="width: 100%;">Criar backup agora</button>
+      <button type="button" class="btn primary full-width" id="btn-criar-backup">Criar backup agora</button>
       <p class="form-error" id="backup-erro"></p>
 
       <div id="backups-lista" style="margin-top: var(--space-4);">
@@ -49,7 +49,7 @@ $active = 'backup';
       <p class="form-error" id="restaurar-erro"></p>
       <p class="form-error" id="restaurar-sucesso" style="display: none; color: var(--ok);"></p>
 
-      <button type="button" class="btn danger" id="btn-restaurar" style="width: 100%;">Restaurar backup</button>
+      <button type="button" class="btn danger full-width" id="btn-restaurar">Restaurar backup</button>
     </div>
   </div>
 

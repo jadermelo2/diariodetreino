@@ -66,7 +66,7 @@ $active = 'peso';
       <p class="form-error" id="peso-erro"></p>
 
       <div class="modal-actions" id="peso-form-acoes">
-        <button type="submit" class="primary" style="width: 100%;">Registrar</button>
+        <button type="submit" class="primary full-width">Registrar</button>
       </div>
     </form>
 

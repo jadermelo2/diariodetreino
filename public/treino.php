@@ -29,7 +29,7 @@ $active = 'treino';
       </div>
 
       <div class="setup-block">
-        <button type="button" class="btn" id="btn-livre" style="width: 100%;">Treino livre (sem rotina)</button>
+        <button type="button" class="btn full-width" id="btn-livre">Treino livre (sem rotina)</button>
       </div>
     </div>
 
@@ -120,7 +120,7 @@ $active = 'treino';
       <div class="surface finish-summary">
         <p id="fim-resumo" class="mono" style="color: var(--text);"></p>
       </div>
-      <a href="treino.php" class="btn primary" style="width: 100%;">Iniciar outro treino</a>
+      <a href="treino.php" class="btn primary full-width">Iniciar outro treino</a>
     </div>
 
   </div>
