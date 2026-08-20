@@ -23,7 +23,6 @@ $links = [
 ?>
 <nav class="topnav">
   <div class="topnav-inner">
-    <span class="topnav-brand mono">DIÁRIO//TREINO</span>
     <div class="topnav-links">
       <?php foreach ($links as $key => $link): ?>
         <a href="<?= htmlspecialchars($link['href']) ?>"

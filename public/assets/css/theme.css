@@ -254,18 +254,6 @@ label {
   max-width: 720px;
   margin: 0 auto;
   padding: var(--space-3) var(--space-4);
-  display: flex;
-  align-items: center;
-  gap: var(--space-5);
-  overflow-x: auto;
-}
-
-.topnav-brand {
-  color: var(--accent);
-  font-weight: 600;
-  font-size: 0.85rem;
-  letter-spacing: 0.06em;
-  white-space: nowrap;
 }
 
 .topnav-links {
