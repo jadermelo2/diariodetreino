@@ -18,6 +18,7 @@ $links = [
     'calendario' => ['href' => 'calendario.php', 'label' => 'Calendário'],
     'exercicios' => ['href' => 'exercicios.php', 'label' => 'Exercícios'],
     'rotinas' => ['href' => 'rotinas.php', 'label' => 'Rotinas'],
+    'backup' => ['href' => 'backup.php', 'label' => 'Backup'],
 ];
 ?>
 <nav class="topnav">

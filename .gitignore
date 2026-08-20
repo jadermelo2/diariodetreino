@@ -1,0 +1,4 @@
+# Backups gerados pela tela de Backup (/backup.php) — arquivos reais dos
+# dados do usuário, não devem ir pro controle de versão. .gitkeep mantém
+# a pasta rastreada mesmo vazia.
+/backups/*.zip
