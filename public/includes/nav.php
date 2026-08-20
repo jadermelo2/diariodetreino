@@ -15,6 +15,7 @@ $links = [
     'treino' => ['href' => 'treino.php', 'label' => 'Treino'],
     'progresso' => ['href' => 'progresso.php', 'label' => 'Progresso'],
     'peso' => ['href' => 'peso.php', 'label' => 'Peso'],
+    'calendario' => ['href' => 'calendario.php', 'label' => 'Calendário'],
     'exercicios' => ['href' => 'exercicios.php', 'label' => 'Exercícios'],
     'rotinas' => ['href' => 'rotinas.php', 'label' => 'Rotinas'],
 ];

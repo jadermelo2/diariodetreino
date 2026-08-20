@@ -980,3 +980,113 @@ label {
   padding: var(--space-1) var(--space-2);
   font-size: 0.8rem;
 }
+
+/* ------------------------------------------------------------------ */
+/* Calendário de frequência e streak                                  */
+/* ------------------------------------------------------------------ */
+
+.streak-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.streak-card {
+  padding: var(--space-4);
+  text-align: center;
+}
+
+.streak-card .streak-emoji {
+  font-size: 1.6rem;
+  display: block;
+  margin-bottom: var(--space-1);
+}
+
+.streak-card .streak-valor {
+  font-family: var(--font-mono);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--accent);
+  display: block;
+}
+
+.streak-card .streak-label {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.calendar-card {
+  padding: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.calendar-scroll {
+  overflow-x: auto;
+  padding-bottom: var(--space-2);
+}
+
+.calendar-inner {
+  display: flex;
+  gap: var(--space-2);
+  width: max-content;
+}
+
+.calendar-weekday-labels {
+  display: grid;
+  grid-template-rows: 14px repeat(7, 12px);
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.calendar-weekday-labels span {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-muted);
+  line-height: 12px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: 14px repeat(7, 12px);
+  gap: 3px;
+}
+
+.calendar-month-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-muted);
+  grid-row: 1;
+  align-self: end;
+}
+
+.calendar-cell {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+}
+
+.calendar-cell.futuro {
+  border-color: transparent;
+  background: transparent;
+}
+
+.calendar-legend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-3);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+}
+
+.calendar-legend .calendar-cell {
+  width: 10px;
+  height: 10px;
+}
