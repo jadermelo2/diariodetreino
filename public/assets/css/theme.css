@@ -72,6 +72,10 @@
 
   /* Altura mínima de alvo de toque (mobile-first, modo treino ativo) */
   --tap-target: 48px;
+
+  /* Menu lateral: recolhido mostra só os ícones, expandido mostra os nomes */
+  --sidenav-width: 52px;
+  --sidenav-width-expanded: 200px;
 }
 
 * {
@@ -91,6 +95,10 @@ body {
   font-size: 16px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  /* O conteúdo sempre reserva só a largura recolhida do menu — quando
+     expandido, o menu flutua por cima (overlay) em vez de espremer o
+     conteúdo, então nenhuma tela quebra em telas estreitas. */
+  padding-left: var(--sidenav-width);
 }
 
 h1, h2, h3, h4 {
@@ -98,6 +106,7 @@ h1, h2, h3, h4 {
   font-weight: 700;
   margin: 0 0 var(--space-3);
   letter-spacing: -0.01em;
+  overflow-wrap: break-word;
 }
 
 /* Números/dados sempre em monoespaçada */
@@ -239,46 +248,158 @@ label {
 }
 
 /* ------------------------------------------------------------------ */
-/* Navegação                                                          */
+/* Navegação — menu lateral fixo (ícones sempre visíveis, expande      */
+/* pra mostrar os nomes). Nunca fica escondido atrás de um hambúrguer. */
 /* ------------------------------------------------------------------ */
 
-.topnav {
-  position: sticky;
+.sidenav {
+  position: fixed;
   top: 0;
-  z-index: 10;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-}
-
-.topnav-inner {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: var(--space-3) var(--space-4);
-}
-
-.topnav-links {
+  left: 0;
+  bottom: 0;
+  width: var(--sidenav-width);
   display: flex;
-  gap: var(--space-4);
-  overflow-x: auto;
+  flex-direction: column;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  z-index: 20;
+  overflow-x: hidden;
+  overflow-y: auto;
+  transition: width 0.15s ease;
 }
 
-.topnav-link {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  font-weight: 600;
+body.sidenav-expanded .sidenav {
+  width: var(--sidenav-width-expanded);
+  box-shadow: 4px 0 16px rgba(0, 0, 0, 0.4);
+}
+
+/* Fundo escurecido atrás do menu expandido — dá pra tocar nele pra
+   recolher de novo. Some quando o menu está recolhido. */
+.sidenav-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  /* precisa começar depois do menu já EXPANDIDO — se usasse a largura
+     recolhida aqui, o backdrop ficaria embaixo do próprio menu e nunca
+     receberia o clique. */
+  left: var(--sidenav-width-expanded);
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 19;
+}
+
+body.sidenav-expanded .sidenav-backdrop {
+  display: block;
+}
+
+.sidenav-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--tap-target);
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--border);
+  color: var(--accent);
   white-space: nowrap;
-  padding: var(--space-1) 0;
-  border-bottom: 2px solid transparent;
+  overflow: hidden;
 }
 
-.topnav-link:hover {
+.sidenav-brand-icon {
+  flex-shrink: 0;
+  width: 28px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.sidenav-brand-full {
+  display: none;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
+
+body.sidenav-expanded .sidenav-brand-full {
+  display: inline;
+}
+
+.sidenav-links {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-2) 0;
+}
+
+.sidenav-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--tap-target);
+  padding: var(--space-3);
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  border-left: 3px solid transparent;
+}
+
+.sidenav-link:hover {
   color: var(--text);
+  background: var(--surface-alt);
   text-decoration: none;
 }
 
-.topnav-link.active {
+.sidenav-link.active {
   color: var(--text);
-  border-bottom-color: var(--accent);
+  background: var(--surface-alt);
+  border-left-color: var(--accent);
+}
+
+.sidenav-icon {
+  flex-shrink: 0;
+  width: 28px;
+  text-align: center;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.sidenav-label {
+  display: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+body.sidenav-expanded .sidenav-label {
+  display: inline;
+}
+
+.sidenav-expand-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: var(--tap-target);
+  padding: var(--space-3);
+  background: none;
+  border: none;
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.sidenav-expand-btn:hover {
+  color: var(--text);
+  background: var(--surface-alt);
+}
+
+.sidenav-expand-btn .sidenav-icon {
+  transition: transform 0.15s ease;
+}
+
+body.sidenav-expanded .sidenav-expand-btn .sidenav-icon {
+  transform: rotate(180deg);
 }
 
 /* ------------------------------------------------------------------ */
@@ -708,7 +829,7 @@ label {
 
 .input-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: var(--space-3);
   margin-bottom: var(--space-4);
 }
@@ -928,12 +1049,12 @@ label {
 }
 
 .peso-form .input-row {
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 }
 
 .medidas-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: var(--space-3);
   margin-bottom: var(--space-3);
 }
@@ -995,7 +1116,7 @@ label {
 
 .streak-cards {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: var(--space-3);
   margin-bottom: var(--space-5);
 }
@@ -1019,11 +1140,17 @@ label {
   display: block;
 }
 
+.streak-card {
+  min-width: 0;
+}
+
 .streak-card .streak-label {
+  display: block;
   color: var(--text-muted);
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  overflow-wrap: break-word;
 }
 
 .calendar-card {
@@ -1167,16 +1294,24 @@ label {
 
 .home-stats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-2);
   margin-bottom: var(--space-5);
 }
 
 .home-stats .streak-card {
-  padding: var(--space-3);
+  padding: var(--space-2) var(--space-1);
 }
 
 .home-stats .streak-valor {
+  font-size: 1.4rem;
+}
+
+.home-stats .streak-label {
+  font-size: 0.68rem;
+}
+
+.home-stats .streak-emoji {
   font-size: 1.4rem;
 }
 
@@ -1186,7 +1321,7 @@ label {
 
 .home-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: var(--space-3);
 }
 
@@ -1222,6 +1357,6 @@ label {
 
 @media (min-width: 480px) {
   .home-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
